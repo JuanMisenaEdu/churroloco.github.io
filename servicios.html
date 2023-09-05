@@ -1,0 +1,40 @@
+{% extends '/sitio/base.html' %}
+
+{% block title %}servicios{% endblock %}
+
+{% block body %}
+<br> 
+<div class="container">
+    <div class="row">
+        {% for servicio in servicios %}
+            <div class="col-md-3">
+                <div class="card text-center card-sm" style="width: 80%; height: auto;">
+                    <div class="d-flex justify-content-center align-items-center" style="height: 100%;">
+                        <img class="card-img-top" src="/img/page/logo.jpg" alt="Title" style="max-width: 80%; max-height: auto;">
+                    </div>
+                    <div class="card-body">
+                        {% if servicio[3]=="Ocupado":%}
+                        <h6 class="alert alert-danger" role="alert" class="card-title" style="font-size: 1.1em;">{{servicio[3]}}</h6>
+                        {%elif servicio[3]=="Disponible":%}
+                        <h6 class="alert alert-success" role="alert" class="card-title" style="font-size: 1.1em;">{{servicio[3]}}</h6>
+                        {%endif%}
+                        <h6 class="card-title" style="font-size: 1.1em;">{{ servicio[2]|capitalize }}  {{servicio[1]}}  {{ servicio[4]}}</h6>
+                        <p class="card text-center mb-3">
+                            <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                <form action="/{{servicio[2]}}/{{servicio[1]}}">
+                                    <input value="{{servicio[0]}}" type="hidden" name="txtID" id="txtID">
+                                    {% if servicio[3]=="Ocupado":%}
+                                    <button type="submit" class="btn btn-outline-danger" style="font-size: 1em;">Pedido</button>
+                                    {%elif servicio[3]=="Disponible":%}
+                                    <button type="submit" class="btn btn-outline-success" style="font-size: 1em;">Pedido</button>
+                                    {%endif%}
+                                </form>                              
+                            </div>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

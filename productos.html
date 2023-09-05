@@ -1,0 +1,166 @@
+{% extends '/admin/base.html' %}
+ 
+{% block title %}Productos {%endblock%}
+
+{% block body%}
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-5">
+            {% with errores = get_flashed_messages(category_filter='error') %}
+                    {% if errores %}
+                        <div class="alert alert-danger" role="alert">
+                            {% for error in errores %}
+                                <strong>{{ error }}</strong>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                {% with exitos = get_flashed_messages(category_filter='success') %}
+                    {% if exitos %}
+                        <div class="alert alert-success" role="alert">
+                            {% for exito in exitos %}
+                                <strong>{{ exito }}</strong>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            <div class="card">
+                <div class="card-header">
+                    Datos del producto
+                </div>
+                <div class="card-body">
+                    <form action="/admin/productos/guardar" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="txtNombre" class="form-label">Nombre:</label>
+                            <input value="{{ get_flashed_messages(category_filter='nombre')[0] }}" type="text" class="form-control" name="txtNombre" id="txtNombre" aria-describedby="helpId" placeholder="Escriba el nombre del producto">
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtdescripcion" class="form-label">Descripcion:</label>
+                            <textarea class="form-control" name="txtdescripcion" id="txtdescripcion" rows="3">{{ get_flashed_messages(category_filter='descripcion')[0] }}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtImagen" class="form-label">Imagen:</label>
+                            <input type="file" class="form-control" name="txtImagen" id="txtImagen" aria-describedby="helpId" placeholder="Seleccione la imagen" value="{{ get_flashed_messages(category_filter='archivo')[0] }}">
+                                {% with archivoss = get_flashed_messages(category_filter='archivo') %}
+                                    {% if archivoss %}
+                                        <img src="/img/temp/{{ get_flashed_messages(category_filter='archivo')[0] }}" alt="Imagen actual" width="100">
+                                    {% endif %}
+                                {% endwith %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtcantidad">Cantidad Existente:</label>
+                            <input value="{{ get_flashed_messages(category_filter='cantidad')[0] }}"  type="number" name="txtcantidad" id="txtcantidad" class="form-control" min="0" required>
+                        </div>
+                        
+                        
+                        <div class="mb-3">
+                            <label for="txtPrecio" class="form-label">Precio:</label>
+                            <input value="{{ get_flashed_messages(category_filter='precio')[0] }}" type="text" class="form-control" name="txtPrecio" id="txtPrecio" aria-describedby="helpId" placeholder="Escriba el precio">
+                        </div>
+                    
+
+                        <div class="mb-3">
+                            <label for="txtTipoProducto" class="form-label">Tipo de Producto:</label>
+                            <select class="form-select" name="txtTipoProducto" id="txtTipoProducto" required>
+                                <option value="" disabled selected>Seleccione un tipo de producto</option>
+                                {% for tipo_prodc in tipo_productos %}
+                                    <option value="{{ tipo_prodc[0] }}">{{ tipo_prodc[1] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-outline-primary">Agregar</button>
+                        </div>
+
+
+
+                    </form>
+                    
+                </div>
+                    <div class="card-footer text-muted">
+                        
+                    </div>
+            </div>  
+        </div>
+        <div class="col-md-7">
+
+            {% for tipo_prodc in tipo_productos %}
+    <h1>{{ tipo_prodc[1] }}</h1>
+    {% set productos_de_tipo = productos | selectattr('6', 'equalto', tipo_prodc[0]) | list %}
+    {% if productos_de_tipo %}
+        <table class="table table-bordered">
+            <thead>
+                <tr class="text-center">
+                    <th>Imagen</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                    <th colspan="3">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos_de_tipo %}
+                    <tr>
+                        <td>
+                            <img width="60" src="/img/products/{{ producto[3] }}" class="img-fluid rounded-top" alt="">
+                        </td>
+                        <td>{{ producto[1] }}</td>
+                        <td>{{ producto[2] }}</td>
+                        <td>
+                            <form action="/admin/productos/modificar" method="post">
+                            <input type="hidden" name="txtID" value="{{ producto[0] }}">
+                            <input type="number" class="form-control" name="txtCantidad" value="{{ producto[5] }}">
+
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" name="txtPrecio" value="{{ producto[4] }}">
+                        </td>
+                        <td>
+
+
+                                    
+                                    <button type="submit" class="btn btn-outline-success">Modificar</button>
+                                </form>
+                            </td>
+
+
+                            <td>
+
+
+
+
+
+
+
+
+                            <a class="btn btn-outline-success" href="/img/products/{{ producto[3] }}" download="{{ producto[1] }}" role="button">Imagen</a> 
+                        </td>
+                        <td>
+                            <form action="/admin/productos/borrar" method="post">
+                                <input value="{{ producto[0] }}" type="hidden" name="txtID" id="txtID">
+                                <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Sin productos.</p>
+    {% endif %}
+{% endfor %}
+
+
+        </div>
+        
+    </div>
+</div>
+
+
+
+{%endblock%}

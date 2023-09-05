@@ -1,0 +1,139 @@
+{% extends '/admin/base.html' %}
+
+{% block title %}servicios {%endblock%}
+
+{% block body%}
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-5">
+            {% with errores = get_flashed_messages(category_filter='error') %}
+                    {% if errores %}
+                        <div class="alert alert-danger" role="alert">
+                            {% for error in errores %}
+                                <strong>{{ error }}</strong>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                {% with exitos = get_flashed_messages(category_filter='success') %}
+                    {% if exitos %}
+                        <div class="alert alert-success" role="alert">
+                            {% for exito in exitos %}
+                                <strong>{{ exito }}</strong>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            <div class="card">
+                <div class="card-header">
+                    Datos del servicio
+                </div>
+                <div class="card-body">
+                    <form action="/admin/servicios/guardar" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="txtnumero" class="form-label">Numero:</label>
+                            <input value="{{ get_flashed_messages(category_filter='numero_servicio')[0] }}" type="number" class="form-control" name="txtnumero" id="txtnumero" aria-describedby="helpId" placeholder="Escribe el numero del servicio">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="txtservicio" class="form-label">Tipo de Servicio:</label>
+                            <select id="txtservicio" class="form-control" name="txtservicio">
+                                <option value="vacio">--Opciones--</option>
+                                <option value="mesa" {% if get_flashed_messages(category_filter='txtservicio')[0] == 'mesa' %} selected {% endif %}>Mesa</option>
+                                <option value="domicilio" {% if get_flashed_messages(category_filter='txtservicio')[0] == 'domicilio' %} selected {% endif %}>Domicilio</option>
+                            </select>
+                        </div>
+                        
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-outline-primary">Agregar</button>
+                        </div>
+                    </form>
+                    
+                </div>
+                    <div class="card-footer text-muted">
+                        
+                    </div>
+            </div>  
+        </div>
+        <div class="col-md-7">
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="text-center">
+                            <th>Numero Mesas</th>
+                            <th>Descripcion</th>
+                            <th colspan="2">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <h2 class="text-center">Mesas</h2>
+                        {% for servicio in servicios %}
+
+                        <tr>
+                            <td>{{servicio[1]}}</td>
+                            <td>
+                                <form action="/admin/servicios/modificar" method="post">
+                                <input value="{{servicio[4]}}" type="text-center" class="form-control" name="tipo_producto" id="tipo_producto" aria-describedby="helpId">    
+                            </td>
+                            <td>
+                                    <input value="{{servicio[0]}}" type="hidden" name="txtID" id="txtID">
+                                    <button type="submit" class="btn btn-outline-success">Modificar</button>
+                                </form>
+                            </td>
+                            <td>
+                                <form action="/admin/servicios/borrar" method="post">
+                                    <input value="{{servicio[0]}}" type="hidden" name="txtID" id="txtID">
+                                    <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <table class="table table-bordered">
+                    <thead>
+                            <tr class="text-center">
+                                <th>Numero Domiciliario</th>
+                                <th>Descripcion</th>
+                                <th colspan="2">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <h2 class="text-center">Domiciliario</h2>
+                        {% for do_servicio in do_servicios %}
+                        <tr>
+                            <td>{{do_servicio[1]}}</td>
+                            <td>
+                                <form action="/admin/servicios/modificar" method="post">
+                                <input value="{{do_servicio[4]}}" type="text-center" class="form-control" name="tipo_producto" id="tipo_producto" aria-describedby="helpId">    
+                            </td>
+                            <td>
+                                    <input value="{{do_servicio[0]}}" type="hidden" name="txtID" id="txtID">
+                                    <button type="submit" class="btn btn-outline-success">Modificar</button>
+                                </form>
+                            </td>
+                            <td>
+                                <form action="/admin/servicios/borrar" method="post">
+                                    <input value="{{do_servicio[0]}}" type="hidden" name="txtID" id="txtID">
+                                    <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            
+
+
+        </div>
+        
+    </div>
+</div>
+<br>
+
+
+
+{%endblock%}

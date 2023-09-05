@@ -1,0 +1,68 @@
+{% extends '/admin/base.html' %}
+
+{% block title %}Tipo de Productos {%endblock%}
+
+{% block body%}
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-header">
+                    Datos del servicio
+                </div>
+                <div class="card-body">
+                    <form action="/admin/tipo_productos/guardare" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="tipo_producto" class="form-label">Tipo de productos:</label>
+                            <input type="text-center" class="form-control" name="tipo_producto" id="tipo_producto" aria-describedby="helpId" placeholder="Escribe nuevo tipo de producto">
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-outline-primary">Agregar</button>
+                        </div>
+                    </form>
+                    
+                </div>
+                    <div class="card-footer text-muted">
+                        
+                    </div>
+            </div>  
+        </div>
+        <div class="col-md-7">
+
+                <table class="table table-bordered">
+
+                    <thead>
+                        <tr class="text-center">
+                            <th>Tipo de productos</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <h2 class="text-center">Tipo de productos</h2>
+                        {% for servicio in tipo %}
+
+                        <tr>
+                            <td>{{servicio[1]}}</td>
+                            <td>
+                                <form action="/admin/tipo_productos/eliminar" method="post">
+                                    <input value="{{servicio[0]}}" type="hidden" name="txtID_tipo_producto" id="txtID_tipo_producto">
+                                    <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+                    </tbody>
+                </table>
+        </div>
+        
+    </div>
+</div>
+<br>
+
+
+
+{%endblock%}
